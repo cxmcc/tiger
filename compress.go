@@ -1,6 +1,17 @@
 package tiger
 
-import "encoding/binary"
+import (
+	"encoding/binary"
+	"unsafe"
+)
+
+var littleEndian bool
+
+func init() {
+	x := uint32(0x04030201)
+	y := [4]byte{0x1, 0x2, 0x3, 0x4}
+	littleEndian = *(*[4]byte)(unsafe.Pointer(&x)) == y
+}
 
 func pass(a *uint64, b *uint64, c *uint64, x []uint64, mul uint64) {
 	round(a, b, c, x[0], mul)
@@ -45,15 +56,29 @@ func compress(d *digest, data []byte) {
 	bb := d.b
 	cc := d.c
 
-	x := []uint64{
-		binary.LittleEndian.Uint64(data[0:8]),
-		binary.LittleEndian.Uint64(data[8:16]),
-		binary.LittleEndian.Uint64(data[16:24]),
-		binary.LittleEndian.Uint64(data[24:32]),
-		binary.LittleEndian.Uint64(data[32:40]),
-		binary.LittleEndian.Uint64(data[40:48]),
-		binary.LittleEndian.Uint64(data[48:56]),
-		binary.LittleEndian.Uint64(data[56:64]),
+	var x []uint64
+	if littleEndian {
+		x = []uint64{
+			binary.LittleEndian.Uint64(data[0:8]),
+			binary.LittleEndian.Uint64(data[8:16]),
+			binary.LittleEndian.Uint64(data[16:24]),
+			binary.LittleEndian.Uint64(data[24:32]),
+			binary.LittleEndian.Uint64(data[32:40]),
+			binary.LittleEndian.Uint64(data[40:48]),
+			binary.LittleEndian.Uint64(data[48:56]),
+			binary.LittleEndian.Uint64(data[56:64]),
+		}
+	} else {
+		x = []uint64{
+			binary.BigEndian.Uint64(data[0:8]),
+			binary.BigEndian.Uint64(data[8:16]),
+			binary.BigEndian.Uint64(data[16:24]),
+			binary.BigEndian.Uint64(data[24:32]),
+			binary.BigEndian.Uint64(data[32:40]),
+			binary.BigEndian.Uint64(data[40:48]),
+			binary.BigEndian.Uint64(data[48:56]),
+			binary.BigEndian.Uint64(data[56:64]),
+		}
 	}
 
 	pass(&d.a, &d.b, &d.c, x, 5)
