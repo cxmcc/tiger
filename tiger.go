@@ -1,9 +1,13 @@
+// Package tiger implements the Tiger hash algorithm
+// https://github.com/cxmcc/tiger
 package tiger
 
 import "hash"
 
+// The size of a Tiger hash value in bytes
 const Size = 24
 
+// The blocksize of Tiger hash function in bytes
 const BlockSize = 64
 
 const (
@@ -30,6 +34,7 @@ func (d *digest) Reset() {
 	d.length = 0
 }
 
+// New returns a new hash.Hash computing the Tiger hash value
 func New() hash.Hash {
 	d := new(digest)
 	d.Reset()
