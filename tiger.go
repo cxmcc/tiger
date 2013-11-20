@@ -97,11 +97,7 @@ func (d0 *digest) Sum(in []byte) []byte {
 
 	for i := uint(0); i < 8; i++ {
 		tmp[i] = byte(d.a >> (8 * i))
-	}
-	for i := uint(0); i < 8; i++ {
 		tmp[i+8] = byte(d.b >> (8 * i))
-	}
-	for i := uint(0); i < 8; i++ {
 		tmp[i+16] = byte(d.c >> (8 * i))
 	}
 
