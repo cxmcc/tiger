@@ -24,6 +24,7 @@ type digest struct {
 	x      [chunk]byte
 	nx     int
 	length uint64
+	ver    int
 }
 
 func (d *digest) Reset() {
@@ -38,8 +39,18 @@ func (d *digest) Reset() {
 func New() hash.Hash {
 	d := new(digest)
 	d.Reset()
+	d.ver = 1
 	return d
 }
+
+// New returns a new hash.Hash computing the Tiger2 hash value
+func New2() hash.Hash {
+	d := new(digest)
+	d.Reset()
+	d.ver = 2
+	return d
+}
+
 func (d *digest) BlockSize() int {
 	return BlockSize
 }
@@ -82,7 +93,12 @@ func (d0 *digest) Sum(in []byte) []byte {
 
 	length := d.length
 	var tmp [64]byte
-	tmp[0] = 0x01
+	if d.ver == 1 {
+		tmp[0] = 0x01
+	} else {
+		tmp[0] = 0x80
+
+	}
 
 	if length&0x3f < 56 {
 		d.Write(tmp[0 : 56-length&0x3f])
