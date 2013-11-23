@@ -48,3 +48,11 @@ func TestGolden(t *testing.T) {
 		}
 	}
 }
+
+func ExampleNew() {
+	h := New()
+	io.WriteString(h, "It's the eye of the tiger, it's the thrill of the fight")
+	io.WriteString(h, "Rising up to the challenge of our rival!")
+	fmt.Printf("%x", h.Sum(nil))
+	// Output: a7bbad36cc17918e399ae8ee893e4595e4d24e1639fe822c
+}
