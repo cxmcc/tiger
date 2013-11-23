@@ -58,6 +58,14 @@ func ExampleNew() {
 	// Output: a7bbad36cc17918e399ae8ee893e4595e4d24e1639fe822c
 }
 
+func ExampleNew2() {
+	h := New2()
+	io.WriteString(h, "It's the eye of the tiger, it's the thrill of the fight")
+	io.WriteString(h, "Rising up to the challenge of our rival!")
+	fmt.Printf("%x", h.Sum(nil))
+	// Output: c86695c2a639506682de2c12c2d23b61a12db78ea1ee1001
+}
+
 var bench = New()
 var buf = make([]byte, 8192+1)
 var sum = make([]byte, bench.Size())
