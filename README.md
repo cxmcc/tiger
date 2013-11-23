@@ -38,7 +38,7 @@ func main() {
   h := tiger.New()
   io.WriteString(h, "Example for tiger")
   fmt.Printf("Output: %x\n", h.Sum(nil))
-  // Output: 6b8a7a04d382e8507606a8b7e16e3fca1585c681df2f2146
+  // Output: 82bd060e19f945014f0063e8f0e6d7decfa9edfd97e76743
 }
 ~~~
 
