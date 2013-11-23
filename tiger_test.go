@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"testing"
+	"unsafe"
 )
 
 type Test struct {
@@ -55,4 +56,48 @@ func ExampleNew() {
 	io.WriteString(h, "Rising up to the challenge of our rival!")
 	fmt.Printf("%x", h.Sum(nil))
 	// Output: a7bbad36cc17918e399ae8ee893e4595e4d24e1639fe822c
+}
+
+var bench = New()
+var buf = make([]byte, 8192+1)
+var sum = make([]byte, bench.Size())
+
+func benchmarkSize(b *testing.B, size int, unaligned bool) {
+	b.SetBytes(int64(size))
+	buf := buf
+	if unaligned {
+		if uintptr(unsafe.Pointer(&buf[0]))&(unsafe.Alignof(uint32(0))-1) == 0 {
+			buf = buf[1:]
+		}
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		bench.Reset()
+		bench.Write(buf[:size])
+		bench.Sum(sum[:0])
+	}
+}
+
+func BenchmarkHash8Bytes(b *testing.B) {
+	benchmarkSize(b, 8, false)
+}
+
+func BenchmarkHash1K(b *testing.B) {
+	benchmarkSize(b, 1024, false)
+}
+
+func BenchmarkHash8K(b *testing.B) {
+	benchmarkSize(b, 8192, false)
+}
+
+func BenchmarkHash8BytesUnaligned(b *testing.B) {
+	benchmarkSize(b, 8, true)
+}
+
+func BenchmarkHash1KUnaligned(b *testing.B) {
+	benchmarkSize(b, 1024, true)
+}
+
+func BenchmarkHash8KUnaligned(b *testing.B) {
+	benchmarkSize(b, 8192, true)
 }
