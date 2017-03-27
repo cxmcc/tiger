@@ -87,7 +87,7 @@ func compress(d *digest, data []byte) {
 	keySchedule(x)
 	pass(&d.b, &d.c, &d.a, x, 9)
 
-	//feedfoward
+	// feedfoward
 	d.a ^= aa
 	d.b -= bb
 	d.c += cc
