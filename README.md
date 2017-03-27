@@ -2,7 +2,7 @@ Tiger cryptographic hash function for Go
 
 -----
 
-[![Build Status](https://drone.io/github.com/cxmcc/tiger/status.png)](https://drone.io/github.com/cxmcc/tiger/latest)
+[![Build Status](https://travis-ci.org/cxmcc/tiger.svg?branch=master)](https://travis-ci.org/cxmcc/tiger)
 [![GoDoc](http://godoc.org/github.com/cxmcc/tiger?status.png)](http://godoc.org/github.com/cxmcc/tiger)
 
 
