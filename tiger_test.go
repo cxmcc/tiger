@@ -3,6 +3,7 @@ package tiger
 import (
 	"fmt"
 	"io"
+	"strings"
 	"testing"
 	"unsafe"
 )
@@ -21,6 +22,7 @@ var golden = []Test{
 	{"0f7bf9a19b9c58f2b7610df7e84f0ac3a71c631e7b53f78e", "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"},
 	{"8dcea680a17583ee502ba38a3c368651890ffbccdc49a8cc", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"},
 	{"1c14795529fd9f207a958f84c52f11e887fa0cabdfd91bfd", "12345678901234567890123456789012345678901234567890123456789012345678901234567890"},
+	{"cdf0990c5c6b6b0bddd63a75ed20e2d448bf44e15fde0df4", strings.Repeat("A", 1024)},
 }
 
 func TestGolden(t *testing.T) {

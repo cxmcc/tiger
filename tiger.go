@@ -77,10 +77,9 @@ func (d *digest) Write(p []byte) (nn int, err error) {
 		}
 		p = p[n:]
 	}
-	if len(p) >= chunk {
-		n := len(p) &^ (chunk - 1)
-		compress(d, p[:n])
-		p = p[n:]
+	for len(p) >= chunk {
+		compress(d, p[:chunk])
+		p = p[chunk:]
 	}
 	if len(p) > 0 {
 		d.nx = copy(d.x[:], p)
