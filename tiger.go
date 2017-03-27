@@ -59,9 +59,9 @@ func (d *digest) Size() int {
 	return Size
 }
 
-func (d *digest) Write(p []byte) (nn int, err error) {
-	nn = len(p)
-	d.length += uint64(nn)
+func (d *digest) Write(p []byte) (length int, err error) {
+	length = len(p)
+	d.length += uint64(length)
 	if d.nx > 0 {
 		n := len(p)
 		if n > chunk-d.nx {
@@ -99,10 +99,11 @@ func (d0 *digest) Sum(in []byte) []byte {
 
 	}
 
-	if length&0x3f < 56 {
-		d.Write(tmp[0 : 56-length&0x3f])
+	size := length & 0x3f
+	if size < 56 {
+		d.Write(tmp[0 : 56-size])
 	} else {
-		d.Write(tmp[0 : 64+56-length&0x3f])
+		d.Write(tmp[0 : 64+56-size])
 	}
 
 	length <<= 3
