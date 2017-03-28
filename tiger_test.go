@@ -23,6 +23,7 @@ var golden = []Test{
 	{"8dcea680a17583ee502ba38a3c368651890ffbccdc49a8cc", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"},
 	{"1c14795529fd9f207a958f84c52f11e887fa0cabdfd91bfd", "12345678901234567890123456789012345678901234567890123456789012345678901234567890"},
 	{"cdf0990c5c6b6b0bddd63a75ed20e2d448bf44e15fde0df4", strings.Repeat("A", 1024)},
+	{"89292aee0f82842abc080c57b3aadd9ca84d66bf0cae77aa", strings.Repeat("A", 1025)},
 }
 
 func TestGolden(t *testing.T) {
@@ -30,7 +31,7 @@ func TestGolden(t *testing.T) {
 		g := golden[i]
 		c := New()
 		buf := make([]byte, len(g.in)+4)
-		for j := 0; j < 3+4; j++ {
+		for j := 0; j < 7; j++ {
 			if j < 2 {
 				io.WriteString(c, g.in)
 			} else if j == 2 {
@@ -48,6 +49,36 @@ func TestGolden(t *testing.T) {
 				t.Fatalf("tiger[%d](%s) = %s want %s", j, g.in, s, g.out)
 			}
 			c.Reset()
+		}
+	}
+}
+
+type WriteTest struct {
+	out int
+	in  string
+}
+
+var writeTestVectors = []WriteTest{
+	{0, ""},
+	{1, "A"},
+	{2, "AA"},
+	{10, strings.Repeat("A", 10)},
+	{1024, strings.Repeat("A", 1024)},
+	{1025, strings.Repeat("A", 1025)},
+	{0, ""},
+}
+
+func TestWriteReturnsCorrectSize(t *testing.T) {
+	c := New()
+	for i := 0; i < len(writeTestVectors); i++ {
+		v := writeTestVectors[i]
+		b := []byte(v.in)
+		length, err := c.Write(b[:len(v.in)])
+		if length != v.out {
+			t.Fatalf("Write() = %d want %d", length, v.out)
+		}
+		if err != nil {
+			t.Fatalf("Write(%s) failed.", v.in)
 		}
 	}
 }

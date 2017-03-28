@@ -67,12 +67,10 @@ func (d *digest) Write(p []byte) (length int, err error) {
 		if n > chunk-d.nx {
 			n = chunk - d.nx
 		}
-		for i := 0; i < n; i++ {
-			d.x[d.nx+i] = p[i]
-		}
+		copy(d.x[d.nx:d.nx+n], p[:n])
 		d.nx += n
 		if d.nx == chunk {
-			compress(d, d.x[0:chunk])
+			compress(d, d.x[:chunk])
 			d.nx = 0
 		}
 		p = p[n:]
@@ -96,25 +94,20 @@ func (d0 *digest) Sum(in []byte) []byte {
 		tmp[0] = 0x01
 	} else {
 		tmp[0] = 0x80
-
 	}
 
 	size := length & 0x3f
 	if size < 56 {
-		d.Write(tmp[0 : 56-size])
+		d.Write(tmp[:56-size])
 	} else {
-		d.Write(tmp[0 : 64+56-size])
+		d.Write(tmp[:64+56-size])
 	}
 
 	length <<= 3
 	for i := uint(0); i < 8; i++ {
 		tmp[i] = byte(length >> (8 * i))
 	}
-	d.Write(tmp[0:8])
-
-	if d.nx != 0 {
-		panic("d.nx != 0")
-	}
+	d.Write(tmp[:8])
 
 	for i := uint(0); i < 8; i++ {
 		tmp[i] = byte(d.a >> (8 * i))
