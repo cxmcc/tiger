@@ -13,22 +13,24 @@ func init() {
 	littleEndian = *(*[4]byte)(unsafe.Pointer(&x)) == y
 }
 
-func pass(a *uint64, b *uint64, c *uint64, x []uint64, mul uint64) {
-	round(a, b, c, x[0], mul)
-	round(b, c, a, x[1], mul)
-	round(c, a, b, x[2], mul)
-	round(a, b, c, x[3], mul)
-	round(b, c, a, x[4], mul)
-	round(c, a, b, x[5], mul)
-	round(a, b, c, x[6], mul)
-	round(b, c, a, x[7], mul)
+func pass(a, b, c uint64, x []uint64, mul uint64) (uint64, uint64, uint64) {
+	a, b, c = round(a, b, c, x[0], mul)
+	b, c, a = round(b, c, a, x[1], mul)
+	c, a, b = round(c, a, b, x[2], mul)
+	a, b, c = round(a, b, c, x[3], mul)
+	b, c, a = round(b, c, a, x[4], mul)
+	c, a, b = round(c, a, b, x[5], mul)
+	a, b, c = round(a, b, c, x[6], mul)
+	b, c, a = round(b, c, a, x[7], mul)
+	return a, b, c
 }
 
-func round(a *uint64, b *uint64, c *uint64, x uint64, mul uint64) {
-	*c ^= x
-	*a -= t1[*c&0xff] ^ t2[(*c>>16)&0xff] ^ t3[(*c>>32)&0xff] ^ t4[(*c>>48)&0xff]
-	*b += t4[(*c>>8)&0xff] ^ t3[(*c>>24)&0xff] ^ t2[(*c>>40)&0xff] ^ t1[(*c>>56)&0xff]
-	*b *= mul
+func round(a, b, c, x, mul uint64) (uint64, uint64, uint64) {
+	c ^= x
+	a -= t1[c&0xff] ^ t2[(c>>16)&0xff] ^ t3[(c>>32)&0xff] ^ t4[(c>>48)&0xff]
+	b += t4[(c>>8)&0xff] ^ t3[(c>>24)&0xff] ^ t2[(c>>40)&0xff] ^ t1[(c>>56)&0xff]
+	b *= mul
+	return a, b, c
 }
 
 func keySchedule(x []uint64) {
@@ -50,11 +52,11 @@ func keySchedule(x []uint64) {
 	x[7] -= x[6] ^ 0x0123456789abcdef
 }
 
-func compress(d *digest, data []byte) {
+func (d *digest) compress(data []byte) {
 	// save_abc
-	aa := d.a
-	bb := d.b
-	cc := d.c
+	a := d.a
+	b := d.b
+	c := d.c
 
 	var x []uint64
 	if littleEndian {
@@ -81,14 +83,14 @@ func compress(d *digest, data []byte) {
 		}
 	}
 
-	pass(&d.a, &d.b, &d.c, x, 5)
+	d.a, d.b, d.c = pass(d.a, d.b, d.c, x, 5)
 	keySchedule(x)
-	pass(&d.c, &d.a, &d.b, x, 7)
+	d.c, d.a, d.b = pass(d.c, d.a, d.b, x, 7)
 	keySchedule(x)
-	pass(&d.b, &d.c, &d.a, x, 9)
+	d.b, d.c, d.a = pass(d.b, d.c, d.a, x, 9)
 
-	// feedfoward
-	d.a ^= aa
-	d.b -= bb
-	d.c += cc
+	// feedforward
+	d.a ^= a
+	d.b -= b
+	d.c += c
 }

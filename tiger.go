@@ -70,13 +70,13 @@ func (d *digest) Write(p []byte) (length int, err error) {
 		copy(d.x[d.nx:d.nx+n], p[:n])
 		d.nx += n
 		if d.nx == chunk {
-			compress(d, d.x[:chunk])
+			d.compress(d.x[:chunk])
 			d.nx = 0
 		}
 		p = p[n:]
 	}
 	for len(p) >= chunk {
-		compress(d, p[:chunk])
+		d.compress(p[:chunk])
 		p = p[chunk:]
 	}
 	if len(p) > 0 {
@@ -85,9 +85,7 @@ func (d *digest) Write(p []byte) (length int, err error) {
 	return
 }
 
-func (d0 *digest) Sum(in []byte) []byte {
-	d := *d0
-
+func (d digest) Sum(in []byte) []byte {
 	length := d.length
 	var tmp [64]byte
 	if d.ver == 1 {
