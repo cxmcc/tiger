@@ -1,6 +1,6 @@
 package tiger
 
-var t1 = []uint64{
+var t1 = [...]uint64{
 	0x02aab17cf7e90c5e, 0xac424b03e243a8ec, 0x72cd5be30dd5fcd3, 0x6d019b93f6f97f3a,
 	0xcd9978ffd21f9193, 0x7573a1c9708029e2, 0xb164326b922a83c3, 0x46883eee04915870,
 	0xeaace3057103ece6, 0xc54169b808a3535c, 0x4ce754918ddec47c, 0x0aa2f4dfdc0df40c,
@@ -67,7 +67,7 @@ var t1 = []uint64{
 	0xffed95d8f1ea02a2, 0xe72b3bd61464d43d, 0xa6300f170bdc4820, 0xebc18760ed78a77a,
 }
 
-var t2 = []uint64{
+var t2 = [...]uint64{
 	0xe6a6be5a05a12138, 0xb5a122a5b4f87c98, 0x563c6089140b6990, 0x4c46cb2e391f5dd5,
 	0xd932addbc9b79434, 0x08ea70e42015aff5, 0xd765a6673e478cf1, 0xc4fb757eab278d99,
 	0xdf11c6862d6e0692, 0xddeb84f10d7f3b16, 0x6f2ef604a665ea04, 0x4a8e0f0ff0e0dfb3,
@@ -134,7 +134,7 @@ var t2 = []uint64{
 	0x9010a91e84711ae9, 0x4df7f0b7b1498371, 0xd62a2eabc0977179, 0x22fac097aa8d5c0e,
 }
 
-var t3 = []uint64{
+var t3 = [...]uint64{
 	0xf49fcc2ff1daf39b, 0x487fd5c66ff29281, 0xe8a30667fcdca83f, 0x2c9b4be3d2fcce63,
 	0xda3ff74b93fbbbc2, 0x2fa165d2fe70ba66, 0xa103e279970e93d4, 0xbecdec77b0e45e71,
 	0xcfb41e723985e497, 0xb70aaa025ef75017, 0xd42309f03840b8e0, 0x8efc1ad035898579,
@@ -201,7 +201,7 @@ var t3 = []uint64{
 	0x454c6fe9f2c0c1cd, 0x419cf6496412691c, 0xd3dc3bef265b0f70, 0x6d0e60f5c3578a9e,
 }
 
-var t4 = []uint64{
+var t4 = [...]uint64{
 	0x5b0e608526323c55, 0x1a46c1a9fa1b59f5, 0xa9e245a17c4c8ffa, 0x65ca5159db2955d7,
 	0x05db0a76ce35afc2, 0x81eac77ea9113d45, 0x528ef88ab6ac0a0d, 0xa09ea253597be3ff,
 	0x430ddfb3ac48cd56, 0xc4b3a67af45ce46f, 0x4ececfd8fbe2d05e, 0x3ef56f10b39935f0,
